@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skylight Estimate - Donald McLaughlin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .logo-section img {
+            max-width: 300px;
+            height: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .company-info {
+            text-align: right;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .company-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .company-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .estimate-title {
+            background: #2a5298;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .estimate-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .estimate-title .date {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .customer-info {
+            padding: 30px 40px;
+            background: #f9f9f9;
+            border-left: 4px solid #2a5298;
+            margin: 20px 40px;
+        }
+
+        .customer-info h3 {
+            color: #2a5298;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .customer-info p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .project-description {
+            padding: 20px 40px;
+            margin: 20px 0;
+        }
+
+        .project-description h3 {
+            color: #2a5298;
+            margin-bottom: 15px;
+            font-size: 22px;
+            border-bottom: 2px solid #2a5298;
+            padding-bottom: 10px;
+        }
+
+        .project-description p {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .line-items {
+            padding: 20px 40px;
+        }
+
+        .line-items h3 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 2px solid #2a5298;
+            padding-bottom: 10px;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .items-table thead {
+            background: #2a5298;
+            color: white;
+        }
+
+        .items-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .items-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .items-table tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        .items-table .qty {
+            text-align: center;
+            width: 80px;
+        }
+
+        .items-table .amount {
+            text-align: right;
+            font-weight: 600;
+            width: 150px;
+        }
+
+        .total-row {
+            background: #f9f9f9;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .total-row td {
+            border-top: 3px solid #2a5298;
+            border-bottom: 3px solid #2a5298;
+            padding: 20px 15px;
+        }
+
+        .photo-gallery {
+            padding: 20px 40px;
+            margin: 30px 0;
+        }
+
+        .photo-gallery h3 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 2px solid #2a5298;
+            padding-bottom: 10px;
+        }
+
+        .photo-section {
+            margin: 30px 0;
+        }
+
+        .photo-section h4 {
+            color: #2a5298;
+            margin-bottom: 15px;
+            font-size: 18px;
+            background: #f9f9f9;
+            padding: 10px 15px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .photo-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .photo-caption {
+            padding: 15px;
+            font-size: 14px;
+            color: #666;
+            background: #fafafa;
+        }
+
+        .terms {
+            padding: 30px 40px;
+            background: #f9f9f9;
+            margin: 20px 40px;
+        }
+
+        .terms h3 {
+            color: #2a5298;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .terms ul {
+            margin-left: 20px;
+        }
+
+        .terms li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .photo-item {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .company-info {
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <img src="https://sigskylights.com/wp-content/uploads/2019/05/SIG-Logo-with-Slogan-small.png" alt="SIG Skylights Logo">
+            </div>
+            <div class="company-info">
+                <h2>SIG Skylights</h2>
+                <p>Southeastern Insulated Glass, Inc.</p>
+                <p>6477-B Peachtree Industrial Blvd.</p>
+                <p>Atlanta, GA 30360</p>
+                <p>Phone: 770-455-8838</p>
+            </div>
+        </div>
+
+        <!-- Estimate Title -->
+        <div class="estimate-title">
+            <h1>ESTIMATE</h1>
+            <p class="date">Date: October 15, 2025</p>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="customer-info">
+            <h3>PREPARED FOR:</h3>
+            <p><strong>Donald McLaughlin</strong></p>
+            <p>170 Spalding Creek Court</p>
+            <p>Atlanta, GA 30350</p>
+        </div>
+
+        <!-- Project Description -->
+        <div class="project-description">
+            <h3>PROJECT DESCRIPTION</h3>
+            <p>This estimate covers the design, fabrication, and installation of custom welded skylight assemblies with solar reflective glass. All skylights are custom-manufactured to meet the specific requirements of the existing roof structure and architectural design.</p>
+            <p><strong>Skylight Type:</strong> Custom Welded Skylight Assemblies with Solar Reflective Glass</p>
+            <p><strong>Material:</strong> Aluminum frame construction with insulated glass units featuring solar reflective coating for enhanced energy efficiency and UV protection.</p>
+        </div>
+
+        <!-- Scope of Work -->
+        <div class="project-description">
+            <h3>SCOPE OF WORK</h3>
+
+            <p><strong>1. SITE PREPARATION AND PROTECTION</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Establish safe work zones and install fall protection systems for steep roof access (7/12 to 9/12 pitch)</li>
+                <li>Install temporary weather protection and tarping to prevent water intrusion during replacement</li>
+                <li>Protect interior spaces below skylights with drop cloths and containment barriers</li>
+                <li>Set up debris containment and disposal systems for safe material removal</li>
+            </ul>
+
+            <p><strong>2. REMOVAL OF EXISTING DAMAGED SKYLIGHT SYSTEMS</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Carefully remove eleven (11) existing welded skylight assemblies showing severe deterioration, failed welds, and compromised weather sealing</li>
+                <li>Remove two (2) corner skylight units with custom angles requiring specialized fabrication</li>
+                <li>Strip and dispose of deteriorated flashing, sealants, and mounting hardware</li>
+                <li>Inspect and document roof deck condition; repair any water-damaged sheathing or structural framing</li>
+                <li>Remove all debris and prepare openings for new skylight installation per manufacturer specifications</li>
+            </ul>
+
+            <p><strong>3. CUSTOM FABRICATION OF WELDED SKYLIGHT ASSEMBLIES</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Field measure all existing skylight openings to ensure precise custom dimensions for proper fit</li>
+                <li>Engineer and fabricate five (5) large welded aluminum skylight assemblies measuring 101" x 36" x 14' each</li>
+                <li>Engineer and fabricate four (4) medium welded aluminum skylight assemblies measuring 101" x 36" x 11' each</li>
+                <li>Custom fabricate two (2) corner skylight units with compound angles to match existing roof geometry</li>
+                <li>All frames constructed from heavy-duty aluminum extrusions with welded corners for superior strength and weather resistance</li>
+                <li>Professional TIG welding of all joints to ensure structural integrity and eliminate future failure points</li>
+                <li>Install high-performance insulated glass units with solar reflective coating to reduce heat gain and UV damage</li>
+                <li>Apply protective finishing to all aluminum surfaces for corrosion resistance and longevity</li>
+            </ul>
+
+            <p><strong>4. INSTALLATION OF NEW SKYLIGHT SYSTEMS</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Transport and hoist large custom skylight assemblies to steep roof location using specialized rigging equipment</li>
+                <li>Install new pressure-treated blocking and structural supports as required by building code</li>
+                <li>Position and secure each skylight assembly using corrosion-resistant fasteners with proper spacing and penetration depth</li>
+                <li>Install custom-fabricated step flashing, counter flashing, and cricket systems to ensure proper water diversion</li>
+                <li>Apply continuous waterproof membrane and high-grade sealants at all penetration points</li>
+                <li>Integrate new flashing with existing roofing system to maintain manufacturer warranty compliance</li>
+                <li>Install condensation management systems including weep holes and drainage channels</li>
+            </ul>
+
+            <p><strong>5. WEATHERPROOFING AND CODE COMPLIANCE</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Install new self-adhering ice and water shield membrane around all skylight perimeters</li>
+                <li>Apply elastomeric sealant at all joints, seams, and fastener penetrations</li>
+                <li>Ensure all installations meet current International Building Code (IBC) and International Residential Code (IRC) requirements</li>
+                <li>Verify proper slope and drainage away from skylight assemblies to prevent ponding water</li>
+                <li>Install thermal breaks where required to prevent condensation and energy loss</li>
+            </ul>
+
+            <p><strong>6. QUALITY CONTROL AND TESTING</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Conduct water testing of all skylight installations to verify weather-tight integrity</li>
+                <li>Inspect all welds and joints for structural soundness and proper execution</li>
+                <li>Verify proper glass installation, glazing, and seal integrity on all units</li>
+                <li>Photograph completed installation for warranty documentation and insurance records</li>
+                <li>Provide manufacturer warranty documentation and care instructions</li>
+            </ul>
+
+            <p><strong>7. SITE CLEANUP AND FINAL INSPECTION</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 15px;">
+                <li>Remove all construction debris, packaging materials, and old skylight components from property</li>
+                <li>Clean all glass surfaces and remove any installation residue or protective films</li>
+                <li>Conduct final walkthrough inspection with property owner</li>
+                <li>Dispose of all materials in accordance with local environmental regulations</li>
+            </ul>
+
+            <p style="margin-top: 20px;"><strong>SPECIAL CONSIDERATIONS:</strong></p>
+            <ul style="margin-left: 25px;">
+                <li><strong>Steep Roof Premium:</strong> Additional labor and safety equipment required for 7/12 to 9/12 pitch roof access</li>
+                <li><strong>Custom Fabrication:</strong> Non-standard sizes require complete custom manufacturing - no off-the-shelf alternatives available</li>
+                <li><strong>Welded Construction:</strong> Superior durability compared to mechanical fastening, preventing the joint failures evident in existing units</li>
+                <li><strong>Complex Configuration:</strong> Multiple skylight assemblies with corner units requiring precise measurements and custom angles</li>
+                <li><strong>Weather Protection:</strong> Critical coordination required to minimize exposure time during replacement to protect interior</li>
+            </ul>
+        </div>
+
+        <!-- Line Items -->
+        <div class="line-items">
+            <h3>ESTIMATE BREAKDOWN</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Item Description</th>
+                        <th class="qty">Quantity</th>
+                        <th class="amount">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Welded Skylight Assembly</strong><br>
+                            Dimensions: 101" x 36" x 14'<br>
+                            Custom solar reflective glass, welded aluminum construction
+                        </td>
+                        <td class="qty">5</td>
+                        <td class="amount">$12,711.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Welded Skylight Assembly</strong><br>
+                            Dimensions: 101" x 36" x 11'<br>
+                            Custom solar reflective glass, welded aluminum construction
+                        </td>
+                        <td class="qty">4</td>
+                        <td class="amount">$10,308.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Corner Skylight Assemblies</strong><br>
+                            Custom corner units with solar reflective glass
+                        </td>
+                        <td class="qty">2</td>
+                        <td class="amount">$2,550.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Welding Labor</strong><br>
+                            Professional welding and assembly of all skylight units
+                        </td>
+                        <td class="qty">1</td>
+                        <td class="amount">$3,000.00</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="2"><strong>TOTAL ESTIMATE</strong></td>
+                        <td class="amount">$28,569.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="photo-gallery">
+            <h3>PROJECT PHOTO DOCUMENTATION</h3>
+            <div class="photo-grid">
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/JDV4LyVLV1aIen7_F3f8hJLGfYeeQthIAATzMTCrvHk/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9kYWUy/ZjRjNC01Y2E1LTQz/MTMtYWYwMC03ZGFh/Njg3Yjg4MWYuanBn.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/PFmgvzI8v3zb-5wHL_1PMB4kn6yaUoUjuo3CF344h78/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS81MjZk/YmNlZi01YjZiLTQ1/ZGQtOWY0MC1jY2Y0/OWZhNmE4ODkuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/MOJNmjzkmSij2V-1sT-zqzqzIJ46aGGmwbxKC0nZHAQ/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9iMmM0/MGRlZS1lODExLTQ1/ZDItYjdmYS0wMmI5/ODYxODRkZTIuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/HiRntwmYas2NvPkf0BcI4JI1Dsp7lobr1CqzAsdooRU/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS83MWVl/ZWNhMC1iMzIzLTQw/NzctYmE5Yi1jYWVj/NGNiZDE1MDIuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/hLGKt071CVkqNtuHieAmvAy1Jzm3P95DYcgS62fdyDU/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS83N2Fi/YjI2MC03YTAyLTQ2/ODktYjIxNi1lMjQ1/MDdiNWQyNmEuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/X1hSLEi8t_SMq-bCE66KdKDWfRgIQV9V68u-HE_2jC8/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9jZWI5/ZGNmNC0zMTY3LTQ4/N2YtYWYyYi00NDFi/NjQ1NjIzMzMuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/Xi7Ji63YcdnIiwcqodSCcq5EXEzZbrn-hgKE4sNgzFs/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS80NTY5/ZWJiNS05YzA3LTRk/MjEtODE0Zi02ZWQx/ZTM3NzUxZjQuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/1tmSD3KID9KLDMuWSSzGbOUbrE7LMcNkw8B0ZiZR2qg/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9mM2Jk/NDBlNS0zYjI0LTRh/YmItODRmNy01YjMx/Nzk1N2Y5YjEuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/Gy-pqiBgDo2PepeIjQOlplkfCADbMQUEMnoyGG8HmiU/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS80MDc3/OTQzYy0yZDEwLTQ1/MzgtYmFkNC1jNTcy/ODBjNjYxZDcuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/WtJbW7Bj2ACc5KfbrJkJonGIkbaS7Fqk5h465qfDpuw/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS80ZjUw/NzM2NC0zNGUyLTQ5/M2UtYWE1Zi1jNzJh/ODllMjJjOGIuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/WYpuVkCPwcgmCBk7LfG-1pXOZvN24_UL0y4RHX1_dFI/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8xNWRl/MmNkNS1lNWIzLTQ0/MjctYTQxNi0wZmE4/NjIxZDkwODguaGVp/Yw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/t3LttHvCRiONAU7Fc-vVhy3Stoi7gM4f6PByv_KuLEo/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9kYTJj/MjBlOS1mNDAzLTRl/YzctOWY2ZS1hZjM1/NzhmOWVkNDUuaGVp/Yw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/sKfCXO3uU9QgABMg_MZ-nRms0UCKJaK5zx5-bybPYoE/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8zYWM0/OWUxMC1lYjM2LTQ3/NzUtYTY5Yy1lZTZl/OTk1NGU3MzQuaGVp/Yw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/MiuZERonD4Friw9Yu9IKfh5ZEgFgoxQj2Pg3bB0_YHk/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS82NGI1/MTJlMy1kYTAzLTRj/NjMtYmMxNy1hYjE1/YjkxZTc0NWMuSlBH.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/WbKz8Fg9fVk-yUUOIKP2QUt9_Pe9G5XQL2ZhhgvUzzk/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8xNzY0/ZGU2ZC0yNDI2LTQz/YWUtYWNlOS05Njhi/Yzc4YTc1OTMuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/fLnbgOJLr7__uS7qxvdK94RJnryADZUHjpVdPcbajR0/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9kMzI3/OWM1My03NWE0LTQ0/OWQtYWNjZC0zNjZi/MTMzZmYzYzEuSlBH.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/JUQBVOKOxhGIcHIZMlejVK_u4ZiTgVuKc84aBxQM2Zg/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9jMDM0/YjIwOS05ZmM0LTQ1/NmMtYTBhMi02MGFh/YjA1NTM2ZGEuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/gaU6m3OtMtRzaZ84CnpRQoNLGj_lOuM02ysTidcsRYA/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8wZmE1/NmU0Mi03YmUxLTQw/MjItOWVmYi04YWY4/OWRhMDc1MWEuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/INVVSINCRc4q9FP3NQ-g-eBUz9zUe7xFn4bRemzqEOY/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8wN2Ri/MDQ1MC0yOTFiLTQ5/ZWItYTdkYy1jOGE1/NjdkNDg5MTUuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/Je4bPEGqpj5g-D-8bnQBv7eENM7erPFVAx3GIw10TvY/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9mODg3/ZDUwZi0yODIxLTQ4/MjgtOTgyNC1hZjcy/ZDM0MDZiZTEuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/PvhQdtJK-A1gvRehIBkWuEhUHjGuS2t4jcVrWCXRPyQ/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS85YTI2/YzM0Ny0zZTdkLTRj/ODAtODRlMy0zNWQx/M2IwOTc5YzQuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/SBaGlMB_B4kCbvRUPvTPnIwgDJW529lJnxU4tbo-Spg/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8xNzVk/NzUxMy1lYmE1LTRj/ZjAtOWJkMy0yNDQ0/YjcyOWM1NGQuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/DaYIOunWgmi64adXW1PDcRVmYIWZzMXL7LpCKAUO-ks/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS80OTIx/YjVjYS1kMDRhLTRh/M2EtYmJiYS1hMDNi/OWJhZDNhMGYuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/s5nAUDBWS0P8FEKCaIsdv0vSXGzFQ6RXJnBlmy5vO7U/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS84YTcz/OWQ1Ni0xN2IyLTQz/OWQtYWE2ZC0yNjE4/Y2FmY2I0N2MuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/DgPDlLwtW-b-KDIfVHvpYwEyqZGbRF1R6XdHpKmcDiw/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9lMDVi/ZTU1My1lNzU1LTRm/OWUtYjYxMi02OGNl/ZjA4OTMwZjYuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/udpU71cE01uCp4z9iU-Rp8oOq73oL3YFIDjr68CHUOQ/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS81MmNj/YmQ4OS01OTBhLTRm/NjQtOGM1ZC04Yzcw/YTMyODc3YzYuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/EmnVo0Xx78CZFl7P6fuK7NgFqmXCUzxpseK5GsK5WF8/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9mZWI5/Y2QyMy0wOTJhLTQ4/NDQtYmY3ZS03ZTNi/NTY3ODg3MWQuaGVp/Yw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/HXOw1S4tsnKl5zwV5dPwg9kaFTFBt9ZSV84h8oAfsRQ/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS8wZmRk/MzMyOS1lZjlhLTQ1/MzktYjNkNi1hNTdh/OTRhZThjYmIuaGVp/Yw.jpg" alt="Skylight">
+                </div>
+                <div class="photo-item">
+                    <img src="https://img.companycam.com/xJA0mB8Cn-a7bEW_O5CWZQB_pZISRzLJgMPncSgDqRA/rs:fit:4032:4032/q:65/aHR0cHM6Ly9jb21w/YW55Y2FtLXBlbmRp/bmcuczMuYW1hem9u/YXdzLmNvbS9hM2U1/NzY4Zi0yYTE3LTRk/ZGYtYmZjMC0xNmNj/ZWU3ODc0NzAuSEVJ/Qw.jpg" alt="Skylight">
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms">
+            <h3>TERMS & CONDITIONS</h3>
+            <ul>
+                <li>This estimate is valid for 30 days from the date listed above</li>
+                <li>All skylights are custom-manufactured to order with lead times of 4-6 weeks</li>
+                <li>Installation and shipping costs are not included in this estimate</li>
+                <li>All products come with manufacturer's warranty</li>
+                <li>50% deposit required upon acceptance of estimate</li>
+                <li>Final payment due upon completion of fabrication</li>
+                <li>Prices subject to change based on material costs and custom specifications</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>SIG Skylights - Southeastern Insulated Glass, Inc.</strong></p>
+            <p>6477-B Peachtree Industrial Blvd., Atlanta, GA 30360</p>
+            <p>Phone: 770-455-8838</p>
+            <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">Custom Skylight Manufacturing | Residential & Commercial</p>
+        </div>
+    </div>
+</body>
+</html>
